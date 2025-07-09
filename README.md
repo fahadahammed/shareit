@@ -70,8 +70,6 @@ poetry build
 poetry publish
 ```
 
-You may need [twine](https://pypi.org/project/twine/) for some workflows.
-
 ## License
 
 MIT License
