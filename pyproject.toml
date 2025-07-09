@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "shareit"
+version = "0.1.0"
+description = "A simple file sharing CLI tool."
+authors = ["Fahad Ahammed"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+psutil = "7.0.0"
+rich = "14.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+
+[tool.poetry.scripts]
+shareit = "shareit.cli:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
