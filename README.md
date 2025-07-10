@@ -76,6 +76,16 @@ poetry build
 poetry publish
 ```
 
+## TODO
+- [ ] Add support for individual file sharing
+- [ ] Implement authentication for shared directories
+- [ ] Check some sensitive file sharing mode, like .env, .git, etc.
+- [ ] Add more CLI options for customization
+- [ ] Improve error handling and logging
+- [ ] Add support for HTTPS sharing
+- [ ] Implement a web interface for browsing shared files
+- [ ] Add support for file uploads to the shared directory
+
 ## License
 
 MIT License
