@@ -1,19 +1,20 @@
-[tool.poetry]
+[project]
 name = "shareit"
 version = "0.1.0"
 description = "A simple file sharing CLI tool."
-authors = ["Fahad Ahammed"]
+authors = [{ name = "Fahad Ahammed", email = "iamfahadahmed@gmail.com" }]
 license = "MIT"
-
-[tool.poetry.dependencies]
-python = ">=3.11,<4.0"
-psutil = "7.0.0"
-rich = "14.0.0"
+dependencies = [
+  "psutil ==7.0.0",
+  "rich ==14.0.0"
+]
+requires-python = ">=3.11,<4.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
+bandit = "^1.7.0"
 
-[tool.poetry.scripts]
+[project.scripts]
 shareit = "shareit.cli:main"
 
 [build-system]

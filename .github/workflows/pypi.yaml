@@ -1,0 +1,71 @@
+name: Build and Publish Python Package to PYPI
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [published]
+
+jobs:
+  Linting:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.13"]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pylint pyyaml
+
+    - name: Analysing the code with pylint
+      run: |
+        pylint --exit-zero $(find src/ -name "*.py" | xargs)
+
+  Build_Publish:
+
+    runs-on: ubuntu-latest
+    needs: [Linting]
+    environment:
+      name: pypi
+      url: https://pypi.org/project/shareit/
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+
+    - name: Copy pyproject
+      run: |
+        echo "Hi: ${{ github.ref }}"
+        sed -i "s|.*version.*|version = \"`echo ${{ github.ref }} | sed 's|/|\t|g' | awk '{print $NF}'`\"|g" pyproject.toml 
+        cp pyproject.toml src/pyproject.toml
+
+    - name: Check Package
+      run: |
+        poetry check
+
+    - name: Install
+      run: poetry install
+
+    - name: Build package
+      run: poetry build
+
+#    - name: Publish
+#      run: |
+#        poetry publish --username __token__ --password ${{ secrets.PYPI_TOKEN }}
