@@ -1,6 +1,12 @@
+[![Test with PyTest and Other Tools](https://github.com/fahadahammed/shareit/actions/workflows/testing_pipeline.yml/badge.svg?branch=main)](https://github.com/fahadahammed/shareit/actions/workflows/testing_pipeline.yml)
+[![Build and Publish Python Package to PYPI](https://github.com/fahadahammed/shareit/actions/workflows/pypi.yaml/badge.svg?branch=main)](https://github.com/fahadahammed/shareit/actions/workflows/pypi.yaml)
+
+
 # shareit
 
 A simple Python CLI tool to share files over your local network easily.
+
+
 
 ## Features
 - Share files or directories from your machine over HTTP
