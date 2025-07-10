@@ -66,4 +66,4 @@ jobs:
 
     - name: Check Security
       run: |
-        bandit -r shareit/cli.py -f json
+        make securityCheck
