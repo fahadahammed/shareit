@@ -27,7 +27,7 @@ jobs:
 
     - name: Analysing the code with pylint
       run: |
-        pylint --exit-zero $(find src/ -name "*.py" | xargs)
+        pylint --exit-zero $(find shareit/ -name "*.py" | xargs)
 
   Build_Publish:
 
