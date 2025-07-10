@@ -51,9 +51,17 @@ jobs:
       with:
         python-version: '3.13'
 
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        export PATH="$HOME/.local/bin:$PATH"
+
+    - name: Install dependencies
+      run: |
+        poetry install --with dev
+
     - name: Install Requirements
       run: |
-        pip install -r requirements.txt
         pip install bandit
 
     - name: Check Security
