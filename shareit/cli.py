@@ -10,6 +10,19 @@ from rich.prompt import Prompt
 import http.server as http_server
 import socketserver
 
+# Function to read the version from pyproject.toml
+def read_pyproject_toml():
+    the_pyproject_toml_file = os.path.dirname(os.path.realpath(__file__)) \
+                              + os.sep + "pyproject.toml"
+    if not os.path.exists(the_pyproject_toml_file):
+        the_pyproject_toml_file = the_pyproject_toml_file.replace("/shareit", "", 1)
+    with open(file=the_pyproject_toml_file, mode='r', encoding='utf-8') as tomlfile:
+        lines = tomlfile.readlines()
+        for line in lines:
+            if "version" in line:
+                return line.split('"')[-2]
+        return ""
+
 
 def is_valid_ip(ip):
     try:
@@ -65,6 +78,7 @@ def file_share(directory, host="0.0.0.0", port=18338):
 
 def main():
     parser = argparse.ArgumentParser(description="Share files over the network.")
+    parser.add_argument('--version', action='version', version="shareit, " + "v" + read_pyproject_toml())
     parser.add_argument('--dir', type=str, default='.', help='Directory to share (default: current directory)')
     parser.add_argument('--host', type=str, default='0.0.0.0', help='Host to bind (default: 0.0.0.0)')
     parser.add_argument('--port', type=int, default=18338, help='Port to bind (default: 18338)')

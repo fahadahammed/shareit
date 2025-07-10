@@ -54,7 +54,7 @@ jobs:
       run: |
         echo "Hi: ${{ github.ref }}"
         sed -i "s|.*version.*|version = \"`echo ${{ github.ref }} | sed 's|/|\t|g' | awk '{print $NF}'`\"|g" pyproject.toml
-
+        cp pyproject.toml shareit/pyproject.toml
 
     - name: Check Package
       run: |
@@ -66,6 +66,6 @@ jobs:
     - name: Build package
       run: poetry build
 
-#    - name: Publish
-#      run: |
-#        poetry publish --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+    - name: Publish
+      run: |
+        poetry publish --username __token__ --password ${{ secrets.PYPI_TOKEN }}
