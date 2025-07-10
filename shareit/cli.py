@@ -78,7 +78,7 @@ def file_share(directory, host="0.0.0.0", port=18338):
 
 def main():
     parser = argparse.ArgumentParser(description="Share files over the network.")
-    parser.add_argument('--version', action='version', version="shareit, " + "v" + read_pyproject_toml())
+    parser.add_argument('--version', action='version', version="shareit, " + read_pyproject_toml())
     parser.add_argument('--dir', type=str, default='.', help='Directory to share (default: current directory)')
     parser.add_argument('--host', type=str, default='0.0.0.0', help='Host to bind (default: 0.0.0.0)')
     parser.add_argument('--port', type=int, default=18338, help='Port to bind (default: 18338)')
