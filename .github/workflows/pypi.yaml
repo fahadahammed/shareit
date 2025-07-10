@@ -1,8 +1,6 @@
 name: Build and Publish Python Package to PYPI
 
 on:
-  push:
-    branches: [ main ]
   release:
     types: [published]
 
