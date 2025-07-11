@@ -30,20 +30,31 @@ poetry add shareit
 
 ## Usage
 
+Share a directory (default: current directory):
+
 ```bash
 shareit --dir <directory> --host <host> --port <port>
 ```
 
+Share a specific file:
+
+```bash
+shareit --file <file_path> --host <host> --port <port>
+```
+
 All arguments are optional:
-- `--dir`   : Directory to share (default: current directory)
-- `--host`  : Host to bind (default: 0.0.0.0)
-- `--port`  : Port to use (default: 18338)
+- `--dir` defaults to current directory
+- `--file` is for sharing a single file
+- `--host` defaults to `0.0.0.0`
+- `--port` defaults to `18338`
 
 Example:
 
 ```bash
-shareit --dir . --host 0.0.0.0 --port 18338
+shareit --file mydoc.pdf --host 192.168.1.10 --port 9000
 ```
+
+The tool will display a formatted link to access the shared file or directory from other devices on your network.
 
 ## Getting Local IP Addresses
 
@@ -77,7 +88,7 @@ poetry publish
 ```
 
 ## TODO
-- [ ] Add support for individual file sharing
+- [x] Add support for individual file sharing
 - [ ] Implement authentication for shared directories
 - [ ] Check some sensitive file sharing mode, like .env, .git, etc.
 - [ ] Add more CLI options for customization
