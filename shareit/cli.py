@@ -12,6 +12,8 @@ import shutil
 
 import http.server as http_server
 import socketserver
+import base64
+from http.server import SimpleHTTPRequestHandler
 
 # Function to read the version from pyproject.toml
 def read_pyproject_toml():
@@ -50,17 +52,59 @@ def get_all_ip_addresses():
                 ip_dict.setdefault(iface, []).append(addr.address)
     return ip_dict
 
-def file_share(directory=None, file=None, host="0.0.0.0", port=18338):
+def random_password(length=12):
+    """Generate a random password of specified length."""
+    import random
+    import string
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for _ in range(length))
+
+class AuthHTTPRequestHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, username=None, password=None, **kwargs):
+        self.username = username
+        self.password = password
+        super().__init__(*args, **kwargs)
+
+    def do_HEAD(self):
+        if not self.authenticate():
+            return
+        super().do_HEAD()
+
+    def do_GET(self):
+        if not self.authenticate():
+            return
+        super().do_GET()
+
+    def authenticate(self):
+        auth_header = self.headers.get('Authorization')
+        if auth_header is None or not auth_header.startswith('Basic '):
+            self.send_auth_required()
+            return False
+        encoded = auth_header.split(' ', 1)[1].strip()
+        decoded = base64.b64decode(encoded).decode('utf-8')
+        user, pwd = decoded.split(':', 1)
+        if user != self.username or pwd != self.password:
+            self.send_auth_required()
+            return False
+        return True
+
+    def send_auth_required(self):
+        self.send_response(401)
+        self.send_header('WWW-Authenticate', 'Basic realm="FileShare"')
+        self.end_headers()
+
+def file_share(directory=None, file=None, host="0.0.0.0", port=18338, username=None, password=None):
     """Function to share files over the network."""
     if not directory and not file:
         rprint("[bold red]Error:[/] You must specify either a directory or a file to share.")
         exit(1)
 
-    rprint(Panel.fit(f"[bold green]Sharing directory:[/] [yellow]{directory}[/] on [cyan]{host}:{port}[/]", title="[bold blue]shareit File Server"))
+    if username and not password:
+        password = random_password(12)
+
     if not os.path.isdir(directory):
         rprint(f"[bold red]Error:[/] The directory [yellow]{directory}[/] does not exist or is not a directory.")
         return
-    rprint(f"[bold green]Directory [yellow]{directory}[/] is valid. Ready to share files.[/]")
 
     # If a file is specified, copy it to the directory to share
     if file:
@@ -77,11 +121,18 @@ def file_share(directory=None, file=None, host="0.0.0.0", port=18338):
 
     os.chdir(directory)  # Change to the directory to share
 
-    handler = http_server.SimpleHTTPRequestHandler
+    handler = lambda *a, **kw: AuthHTTPRequestHandler(*a, username=username, password=password, **kw)
     with socketserver.TCPServer((host, port), handler) as httpd:
-        rprint(Panel.fit("[bold green]File sharing service started successfully![/]", title="[bold blue]Server Status"))
+
+        rprint(Panel.fit(f"[bold green]File sharing service started successfully![/]\n[bold white]Directory {directory} is shared.[/]", title="[bold blue]Server Status"))
+
+        if username and password:
+            table = Table(title="Basic Authentication", show_header=True, header_style="bold magenta")
+            table.add_column("Username", style="dim")
+            table.add_column("Password", style="dim")
+            table.add_row(username, password)
+            rprint(table)
         if host == "0.0.0.0":
-            rprint("[bold yellow]Files are available on the following IP addresses:[/]")
             table = Table(title="Access URLs", show_header=True, header_style="bold magenta")
             table.add_column("Interface", style="dim")
             table.add_column("IP Address")
@@ -122,9 +173,12 @@ def main():
     group.add_argument('--file', type=str, help='File to share')
     parser.add_argument('--host', type=str, default='0.0.0.0', help='Host to bind (default: 0.0.0.0)')
     parser.add_argument('--port', type=int, default=18338, help='Port to bind (default: 18338)')
+    parser.add_argument('--username', type=str, default=None, help='Username for HTTP basic authentication')
+    parser.add_argument('--password', type=str, default=None, help='Password for HTTP basic authentication')
     args = parser.parse_args()
-    rprint("[bold white]Welcome to shareit CLI File Sharing Tool[/]")
-    rprint("[bold white]───────────────────────────────────────────")
+    welcome_message = f"""Welcome to Shareit CLI File Sharing Tool v{read_pyproject_toml()}"""
+    rprint(f"[bold white]{welcome_message}[/]")
+    rprint(f"[bold white]{'─'*len(welcome_message)}[/]")
     ip_addresses = ["0.0.0.0"]
 
     the_host = args.host
@@ -155,20 +209,18 @@ def main():
             else:
                 rprint("[bold white]Invalid index. Using default host.")
         except ValueError:
-            rprint("[bold orange]Invalid input. Using default host.")
-            rprint(f"Using host: {the_host}")
-    rprint(f"Using host: {the_host}")
+            rprint("[bold yellow]Invalid input. Using default host.")
+            rprint(f"[bold yellow]Using host: {the_host}")
     try:
         if args.dir:
-            rprint(f"[bold white]Sharing directory: {args.dir}[/]")
-            file_share(directory=args.dir, host=the_host, port=args.port)
+            file_share(directory=args.dir, host=the_host, port=args.port, username=args.username, password=args.password)
         else:
             rprint(f"[bold white]Sharing file: {args.file}[/]")
             if not os.path.isfile(args.file):
                 rprint(f"[bold red]Error:[/] The file [yellow]{args.file}[/] does not exist or is not a file.")
                 exit(1)
             dir_path = generate_temporary_dir(the_path=".")
-            file_share(directory=dir_path,file=args.file, host=the_host, port=args.port)
+            file_share(directory=dir_path,file=args.file, host=the_host, port=args.port, username=args.username, password=args.password)
     except Exception as e:
         rprint(f"[bold red]Error:[/] {e}")
         rprint("[bold red]Failed to start file sharing service.[/]")
