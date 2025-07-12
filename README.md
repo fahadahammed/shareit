@@ -89,7 +89,7 @@ poetry publish
 
 ## TODO
 - [x] Add support for individual file sharing
-- [ ] Implement authentication for shared directories
+- [x] Implement authentication for shared directories
 - [ ] Check some sensitive file sharing mode, like .env, .git, etc.
 - [ ] Add more CLI options for customization
 - [ ] Improve error handling and logging
