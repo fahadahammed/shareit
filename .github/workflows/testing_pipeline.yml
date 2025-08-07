@@ -12,7 +12,8 @@ env:
 jobs:
   PyTest:
     runs-on: ubuntu-latest
-
+    outputs:
+      built: ${{ steps.filter.outputs.built }}
     steps:
       - uses: actions/checkout@v4
 
@@ -34,17 +35,24 @@ jobs:
         run: |
           poetry run pytest
 
-      - name: Write Output
-        run: echo true > depends_PyTest.txt
+      - name: If Success in above steps
+        id: filter
+        run: |
+          echo "built=true" >> $GITHUB_OUTPUT
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: depends_PyTest
-          path: depends_PyTest.txt
+
+      # - name: Write Output
+      #   run: echo true > depends_PyTest.txt
+
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: depends_PyTest
+      #     path: depends_PyTest.txt
 
   Dummy:
     runs-on: ubuntu-latest
-
+    outputs:
+      built: ${{ steps.filter.outputs.built }}
     steps:
 
     - uses: actions/checkout@v4
@@ -54,13 +62,18 @@ jobs:
       run: |
         curl ipinfo.io
 
-    - name: Write Output
-      run: echo true > depends_Dummy.txt
+    - name: If Success in above steps
+      id: filter
+      run: |
+        echo "built=true" >> $GITHUB_OUTPUT
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: depends_Dummy
-        path: depends_Dummy.txt
+    # - name: Write Output
+    #   run: echo true > depends_Dummy.txt
+
+    # - uses: actions/upload-artifact@v4
+    #   with:
+    #     name: depends_Dummy
+    #     path: depends_Dummy.txt
 
   SecurityCheck:
     runs-on: ubuntu-latest
