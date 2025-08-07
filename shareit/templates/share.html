@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareIt File Server</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8fafc;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 32px 24px;
+        }
+        h2 {
+            color: #0074d9;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        th, td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #eaeaea;
+            text-align: left;
+        }
+        th {
+            background: #f4f4f4;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f1f8ff;
+        }
+        a {
+            color: #0074d9;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+            font-size: 15px;
+        }
+        .badge {
+            display: inline-block;
+            background: #0074d9;
+            color: #fff;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 12px 4px;
+            }
+            th, td {
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Directory listing for <span class="badge">{{ dir_name }}</span></h2>
+        <table>
+            <tr><th>Name</th><th>Type</th><th>Size</th></tr>
+            {% for name in files %}
+                {% set fullname = directory + '/' + name %}
+                <tr>
+                    <td><a href="/file/{{ name }}">{{ name }}</a></td>
+                    <td>{% if os.path.isdir(fullname) %}<span class="badge" style="background:#888;">DIR</span>{% else %}File{% endif %}</td>
+                    <td>{% if os.path.isdir(fullname) %}-{% else %}{{ os.path.getsize(fullname) }} bytes{% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="footer">
+            <a href="https://github.com/fahadahammed/shareit" target="_blank">ShareIt Flask File Server</a> v{{ version }} &copy; 2025
+        </div>
+    </div>
+</body>
+</html>

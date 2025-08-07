@@ -38,9 +38,44 @@ jobs:
         run: |
           poetry run pytest
 
+      - name: Write Output
+        run: echo true > depends_PyTest.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: depends_PyTest
+          path: depends_PyTest.txt
+
+  Dummy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v4
+      
+    - name: Yo
+      shell: bash
+      run: |
+        curl ipinfo.io
+
+    - name: Write Output
+      run: echo true > depends_Dummy.txt
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: depends_Dummy
+        path: depends_Dummy.txt
 
   SecurityCheck:
     runs-on: ubuntu-latest
+
+    needs:
+    - PyTest
+    - Dummy
+
+    if: |
+      needs.PyTest.outputs.built == 'true' ||
+      needs.Dummy.outputs.built == 'true'
 
     steps:
 
