@@ -60,7 +60,7 @@ jobs:
     - name: Yo
       shell: bash
       run: |
-        curl ipinfo.io
+        curlx ipinfo.io
 
     - name: If Success in above steps
       id: filter
