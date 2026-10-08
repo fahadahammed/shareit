@@ -1,6 +1,6 @@
 [project]
 name = "shareit"
-version = "0.1.0"
+version = "1.0.0"
 description = "A simple file sharing CLI tool."
 authors = [{ name = "Fahad Ahammed", email = "iamfahadahmed@gmail.com" }]
 license = "MIT"
