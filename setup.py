@@ -7,6 +7,7 @@ setup(
     install_requires=[
         'psutil==7.0.0',
         'rich==14.0.0',
+        'cryptography==50.0.2',
     ],
     entry_points={
         'console_scripts': [
