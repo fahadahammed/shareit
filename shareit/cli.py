@@ -28,7 +28,9 @@ _SENSITIVE_NAMES = {
     ".git", ".svn", ".hg", ".ssh", ".aws", ".gnupg",
     ".htpasswd", ".netrc", ".npmrc", ".pypirc",
     "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519",
-    "credentials.json", "secrets.json",
+    "credentials.json", "secrets.json", '.env', '.env.local', 
+    '.env.development', '.env.production', '.env.test', '.env.development.local', 
+    '.env.production.local', '.env.test.local',
 }
 
 from shareit.certs import (
@@ -548,7 +550,7 @@ class ShareRequestHandler(AuthHTTPRequestHandler):
         html_parts.append(
             "<div style='text-align:center; margin-top:30px; color:#888;'>"
             "<a href='https://github.com/fahadahammed/shareit' target=_blank>ShareIt File Server</a> "
-            f"v{html.escape(read_pyproject_toml())} &copy; 2025</div>"
+            f"v{html.escape(read_pyproject_toml())} &copy; {datetime.datetime.now().year}</div>"
         )
         html_parts.append("</body></html>")
         encoded = "\n".join(html_parts).encode("utf-8", "surrogateescape")
