@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.13"]
+        python-version: ["3.13", "3.14", "3.15"]
     steps:
     - uses: actions/checkout@v2
 
@@ -31,6 +31,9 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: [Linting]
+    strategy:
+      matrix:
+        python-version: ["3.13", "3.14", "3.15"]
     environment:
       name: pypi
       url: https://pypi.org/project/shareit/
@@ -38,10 +41,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.13'
+        python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
@@ -65,5 +68,6 @@ jobs:
       run: poetry build
 
     - name: Publish
+      if: matrix.python-version == '3.15'
       run: |
         poetry publish --username __token__ --password ${{ secrets.PYPI_TOKEN }}

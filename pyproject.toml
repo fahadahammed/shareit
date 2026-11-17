@@ -2,6 +2,7 @@
 name = "shareit"
 version = "1.0.0"
 description = "A simple file sharing CLI tool."
+readme = "README.md"
 authors = [{ name = "Fahad Ahammed", email = "iamfahadahmed@gmail.com" }]
 license = "MIT"
 dependencies = [
@@ -10,10 +11,23 @@ dependencies = [
   "cryptography ==50.0.2"
 ]
 requires-python = ">=3.11,<4.0"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
 bandit = "^1.7.0"
+
+[project.urls]
+Homepage = "https://github.com/fahadahammed/shareit"
+Repository = "https://github.com/fahadahammed/shareit"
+Issues = "https://github.com/fahadahammed/shareit/issues"
 
 [project.scripts]
 shareit = "shareit.cli:main"
