@@ -436,7 +436,7 @@ class ShareRequestHandler(AuthHTTPRequestHandler):
     allow_sensitive = False
     page_title = "ShareIt"
     share_root = None
-    max_upload_bytes = 512 * 1024 * 1024
+    max_upload_bytes = 1024 * 1024 * 1024
 
     def _request_is_sensitive(self):
         if self.allow_sensitive or not self.share_root:
@@ -615,7 +615,7 @@ def build_request_handler(username, password, allow_upload, share_root, max_uplo
     return handler
 
 
-def file_share(directory=None, file=None, host="0.0.0.0", port=18338, username=None, password=None, upload=False, max_upload_mb=512, cert_file=None, key_file=None, tls_generated=False, tls_self_signed=False, allow_sensitive=False, page_title="ShareIt"):
+def file_share(directory=None, file=None, host="0.0.0.0", port=18338, username=None, password=None, upload=False, max_upload_mb=1024, cert_file=None, key_file=None, tls_generated=False, tls_self_signed=False, allow_sensitive=False, page_title="ShareIt"):
     """Function to share files over the network."""
     if not directory and not file:
         logger.error("No directory or file was provided")
@@ -848,7 +848,7 @@ def build_parser():
     upload_parser.add_argument('--port', type=int, default=18338, help='Port to bind (default: 18338)')
     upload_parser.add_argument('--username', type=str, default=None, help='Username for HTTP basic authentication')
     upload_parser.add_argument('--password', type=str, default=None, help='Password for HTTP basic authentication')
-    upload_parser.add_argument('--max-upload-mb', type=int, default=512, help='Maximum total upload size in megabytes (default: 512)')
+    upload_parser.add_argument('--max-upload-mb', type=int, default=1024, help='Maximum total upload size in megabytes (default: 1024)')
     add_server_arguments(upload_parser)
 
     cert_parser = subparsers.add_parser('cert', help='Create, inspect, or remove HTTPS certificates')

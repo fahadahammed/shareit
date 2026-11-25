@@ -69,7 +69,7 @@ class TestUploadCommand:
         assert args.command == "upload"
         assert args.dir == "/tmp/inbox"
         assert args.port == 18338
-        assert args.max_upload_mb == 512
+        assert args.max_upload_mb == 1024
 
 
 def _multipart_body(files, boundary="----ShareItTestBoundary7f3a"):

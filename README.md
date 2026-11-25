@@ -59,7 +59,7 @@ shareit share --file ~/Documents/mydoc.pdf --host 192.168.1.10 --port 9000
 shareit upload --dir ~/inbox --host 192.168.1.10 --port 9000
 ```
 
-`upload` requires `--dir`. Open the printed URL on another device and use the upload form. Files are saved into the folder you are browsing, including subfolders. An existing file is kept; a second file with the same name is saved as `name (1).ext`. `--max-upload-mb` defaults to 512.
+`upload` requires `--dir`. Open the printed URL on another device and use the upload form. Files are saved into the folder you are browsing, including subfolders. An existing file is kept; a second file with the same name is saved as `name (1).ext`. `--max-upload-mb` defaults to 1024 (1 GB).
 
 ### Password protection
 
@@ -152,7 +152,7 @@ A busy port and a permissions failure are reported as those errors.
 | `--key` | `~/.shareit/certs/shareit.key` when `--https` is set | PEM private key |
 | `--allow-sensitive` | off | Share hidden files such as `.env` and `.git` |
 | `--log-file` | | Also write logs to this file |
-| `--max-upload-mb` | `512` | Upload size limit. `upload` only |
+| `--max-upload-mb` | `1024` | Upload size limit in MB. `upload` only |
 
 When `--host` is `0.0.0.0`, shareit prints every local interface and a URL for it.
 
